@@ -233,8 +233,8 @@
 
 			// Toggle children on click.
 			function click(d) {
-				if (d3.event.defaultPrevented)
-					return; // click suppressed
+				//if (d3.event.defaultPrevented)
+				//	return; // click suppressed
 				d = toggleChildren(d);
 				update(d);
 				//centerNode(d);
@@ -397,33 +397,16 @@
 
 			// Append a group which holds all nodes and which the zoom Listener can act upon.
 			var svgGroup = baseSvg.append("g");
-			
-	/*		
-			function centerNode(source) {
-				scale = zoomListener.scale();
-				x = -source.y0;
-				y = -source.x0;
-				x = x * scale + viewerWidth / 2;
-				y = y * scale + viewerHeight / 2;
-				d3.select('g').transition().duration(duration).attr(
-						"transform",
-						"translate(" + x + "," + y + ")scale(" + scale + ")");
-				zoomListener.scale(scale);
-				zoomListener.translate([ x, y ]);
-			}
-*/
 
-console.log("row col-md-12 hieth " + $(".row col-md-12").height());
 			// Define the root
 			root = treeData;
-			root.x0 =   (viewerHeight -400) / 2;
+			root.x0 =   (viewerHeight  ) / 4;
 			root.y0 = 40;
 			
 			scale = zoomListener.scale();
 			x = root.y0;
 			y = root.x0;
-		//	x = x * scale + viewerWidth / 2;
-		//	y = y * scale + viewerHeight / 2;
+
 			d3.select('g').transition().duration(duration).attr(
 					"transform",
 					"translate(" + x + "," + y + ")scale(" + scale + ")");
