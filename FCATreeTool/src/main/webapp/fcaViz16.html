@@ -78,7 +78,7 @@
 			if (!window.FileReader) {
 				alert('Your browser is not supported')
 			}
-			var input = fileInput.get(0);		
+			var input = fileInput.get(0);
 
 			// Create a reader object
 			var reader = new FileReader();
@@ -96,6 +96,8 @@
 
 	<script>
 		function drawDendrogram(e) {
+
+			//$("#tree-container").height();   //$(document).height();
 			console.log("in drawDendrongram");
 			d3.select("svg").remove();
 			var jsonFile = e.target.result;
@@ -105,10 +107,7 @@
 			// Calculate total nodes, max label length
 			var totalNodes = 0;
 			var maxLabelLength = 20;
-			// variables for drag/drop
-			var selectedNode = null;
-			var draggingNode = null;
-			// panning variables
+
 			var panSpeed = 200;
 			var panBoundary = 20; // Within 20px from edges will pan when dragging.
 			// Misc. variables
@@ -230,14 +229,24 @@
 
 			// Toggle children on click.
 			function click(d) {
-				if (d3.event.defaultPrevented)
-					return; // click suppressed
+				//if (d3.event.defaultPrevented)
+				//	return; // click suppressed
 				d = toggleChildren(d);
 				update(d);
-				centerNode(d);
+				//centerNode(d);
 			}
 
 			function update(source) {
+
+				//collapse all children so click will only open one level.
+				//not applied initially if fully expanded selected
+				if (oneLevel) {
+					if (source.children)
+						source.children.forEach(function(child) {							
+							collapse(child);
+						});					
+				}
+				oneLevel=true; 
 
 				console.log("in update");
 				// Compute the new height, function counts total children of root node and sets tree height accordingly.
@@ -302,26 +311,26 @@
 				});
 
 				if (document.getElementById('attributes').checked)
-				node.append("text").attr("transform", "translate(15, 0)").text(
-						function(d) {
-							return d.attributes
-						});
+					node.append("text").attr("transform", "translate(15, 0)")
+							.text(function(d) {
+								return d.attributes
+							});
 
 				if (document.getElementById('objects').checked)
-				node.append("text").attr("transform", "translate(15, 12)")
-						.text(function(d) {
+					node.append("text").attr("transform", "translate(15, 12)")
+							.text(function(d) {
 
-							if (d._children)
-								return d.objects;
-							else
-								return d.own_objects;
-						});
+								if (d._children)
+									return d.objects;
+								else
+									return d.own_objects;
+							});
 
 				if (document.getElementById('objectCount').checked)
-				node.append("text").attr("transform", "translate(15, 24)")
-						.text(function(d) {
-							return d.ObjectCount
-						});
+					node.append("text").attr("transform", "translate(15, 24)")
+							.text(function(d) {
+								return d.ObjectCount
+							});
 
 				// Transition nodes to their new position.
 				var nodeUpdate = node.transition().duration(duration).attr(
@@ -397,22 +406,31 @@
 
 			// Define the root
 			root = treeData;
-			root.x0 = viewerHeight / 2;
-			root.y0 = 0;
+			root.x0 = (viewerHeight) / 4;
+			root.y0 = 40;
 
-			var collapsed = $('input[name=type]:checked', '#expanded').val() == "oneLevel";
+			scale = zoomListener.scale();
+			x = root.y0;
+			y = root.x0;
 
-			console.log("collapsed: " + collapsed);
+			d3.select('g').transition().duration(duration).attr("transform",
+					"translate(" + x + "," + y + ")scale(" + scale + ")");
+			zoomListener.scale(scale);
+			zoomListener.translate([ x, y ]);
+
+			var oneLevel = $('input[name=type]:checked', '#expanded').val() == "oneLevel";
+
+			console.log("oneLevel: " + oneLevel);
 
 			// Collapse all children of roots children before rendering.
-			if (collapsed)
+			if (oneLevel)
 				root.children.forEach(function(child) {
 					collapse(child);
 				});
 
 			// Layout the tree initially and center on the root node.
 			update(root);
-			centerNode(root);
+			//centerNode(root);
 		};
 	</script>
 </body>
