@@ -33,7 +33,7 @@
 	rel="stylesheet">
 <link rel="shortcut icon" href="favicon.ico">
 <meta http-equiv="Content-type" content="text/html; charset=utf-8">
-<title> FCA Tree Tool </title>
+<title>FCA Tree Tool</title>
 <body>
 	<div class="container  col-md-12">
 		<h1>FCA Tree Tool</h1>
@@ -55,6 +55,10 @@
 						<input type="radio" id="full" name="type" value="full">
 						Fully Expanded <br /> <input type="radio" id="oneLevel"
 							name="type" value="oneLevel" checked="true"> One Level
+					</form>
+<br>
+					<form action="demo_form.asp">
+						<input type="checkbox" name="vertical" value="vertical"> Show Graph Vertically<br> 
 					</form>
 				</div>
 
@@ -244,11 +248,11 @@
 				//not applied initially if fully expanded selected
 				if (oneLevel) {
 					if (source.children)
-						source.children.forEach(function(child) {							
+						source.children.forEach(function(child) {
 							collapse(child);
-						});					
+						});
 				}
-				oneLevel=true; 
+				oneLevel = true;
 
 				console.log("in update");
 				// Compute the new height, function counts total children of root node and sets tree height accordingly.
