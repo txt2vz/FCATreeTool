@@ -56,9 +56,10 @@
 						Fully Expanded <br /> <input type="radio" id="oneLevel"
 							name="type" value="oneLevel" checked="true"> One Level
 					</form>
-<br>
+					<br>
 					<form action="demo_form.asp">
-						<input type="checkbox" name="vertical" value="vertical"> Show Graph Vertically<br> 
+						<input type="checkbox" name="vertical" value="vertical">
+						Show Graph Vertically<br>
 					</form>
 				</div>
 
@@ -312,9 +313,26 @@
 					return d.Node;
 				});
 
-				node.append("svg:title").text(function(d) {
-					return d.attributes;
-				});
+				node.append("svg:title").html(
+						function(d) {
+							var max = 200;
+							var returnString = "";
+							var objString = "empty";
+							var attrString = "empty";
+							if (d.objects.toString())
+								objString = d.objects.toString();
+							if (d.attributes.toString())
+								attrString = d.attributes.toString();
+
+							if (objString.length > max)
+								objString = objString.substring(0, max) + '...';
+							if (attrString.length > max)
+								attrString = attrString.substring(0, max) + '...';
+
+							return "Objects:    " + "<br />" + objString + "<br /> <br />"
+									+ "Attributes: " + "<br />" + attrString ;
+
+						});
 
 				if (document.getElementById('attributes').checked)
 					node.append("text").attr("transform", "translate(15, 0)")
